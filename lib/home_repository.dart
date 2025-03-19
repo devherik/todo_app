@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/adapters.dart';
-import 'package:minimalist_todo/home_viewmodel.dart';
+import 'package:minimalist_todo/task_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeRepository {
@@ -26,6 +26,8 @@ class HomeRepository {
 
   Future<Result<bool, Exception>> initialize() async {
     try {
+      //register the adapter, must be done before
+      //opening the box
       Hive.registerAdapter(TaskEntityAdapter());
       box = await Hive.openBox('tasks');
       return Success(true);
@@ -47,28 +49,34 @@ class HomeRepository {
     }
   }
 
-  void addTask(TaskEntity task) {}
-  void removeTask(TaskEntity task) {}
-  void toggleTask(TaskEntity task) {}
-}
-
-class TaskEntityAdapter extends TypeAdapter<TaskEntity> {
-  @override
-  final int typeId = 0;
-
-  @override
-  TaskEntity read(BinaryReader reader) {
-    return TaskEntity(
-      title: reader.readString(),
-      description: reader.readString(),
-      isCompleted: reader.readBool(),
-    );
+  Future<Result<bool, Exception>> addTask(TaskEntity task) async {
+    try {
+      await box.add(task.toJson());
+      return Success(true);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
   }
 
-  @override
-  void write(BinaryWriter writer, TaskEntity obj) {
-    writer.writeString(obj.title);
-    writer.writeString(obj.description);
-    writer.writeBool(obj.isCompleted);
+  Future<Result<bool, Exception>> removeTask(TaskEntity task) async {
+    try {
+      await box.deleteAt(box.values.toList().indexOf(task.toJson()));
+      return Success(true);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<bool, Exception>> toggleTask(TaskEntity task) async {
+    try {
+      final index = box.values.toList().indexOf(task.toJson());
+      final data = box.getAt(index);
+      final updatedTask = TaskEntity.fromJson(data);
+      updatedTask.isCompleted = !updatedTask.isCompleted;
+      await box.putAt(index, updatedTask.toJson());
+      return Success(true);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:minimalist_todo/task_entity.dart';
 
 class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
   HomeViewmodel() : super([]);
@@ -7,21 +8,4 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
   addTask(TaskEntity task) {}
   removeTask(TaskEntity task) {}
   toggleTask(TaskEntity task) {}
-}
-
-class TaskEntity {
-  final String title;
-  final String description;
-  final bool isCompleted;
-
-  TaskEntity({
-    required this.title,
-    required this.description,
-    required this.isCompleted,
-  });
-
-  TaskEntity.fromJson(Map<String, dynamic> json)
-    : title = json['title'],
-      description = json['description'],
-      isCompleted = json['isCompleted'];
 }
