@@ -65,7 +65,11 @@ class HomeRepository {
 
   Future<Result<bool, Exception>> removeTask(TaskEntity task) async {
     try {
-      await tasksBox.deleteAt(tasksBox.values.toList().indexOf(task.toJson()));
+      final data = tasksBox.values.toList();
+      final index = data.indexWhere(
+        (element) => element['index'] == task.index,
+      );
+      await tasksBox.deleteAt(index);
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);

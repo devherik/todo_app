@@ -39,7 +39,11 @@ class _HomeState extends State<Home> {
                   itemBuilder: (context, index) {
                     final task = tasks[index];
                     return ListTile(
-                      title: Text('${task.title} | ${task.index}'),
+                      title: GestureDetector(
+                        child: Text('${task.title} | ${task.index}'),
+                        onLongPress:
+                            () async => await _viewmodel.removeTask(task),
+                      ),
                       subtitle: Text(task.description),
                       trailing: Checkbox(
                         value: task.isCompleted,
