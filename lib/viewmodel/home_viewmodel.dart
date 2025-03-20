@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:minimalist_todo/home_repository.dart';
+import 'package:minimalist_todo/repository/home_repository.dart';
 import 'package:minimalist_todo/main.dart';
-import 'package:minimalist_todo/task_entity.dart';
+import 'package:minimalist_todo/data_sources/task_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {

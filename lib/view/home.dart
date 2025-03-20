@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:minimalist_todo/home_viewmodel.dart';
-import 'package:minimalist_todo/task_entity.dart';
+import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
+import 'package:minimalist_todo/data_sources/task_entity.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key, required this.title});

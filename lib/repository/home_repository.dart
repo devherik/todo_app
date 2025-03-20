@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/adapters.dart';
-import 'package:minimalist_todo/task_entity.dart';
+import 'package:minimalist_todo/data_sources/task_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeRepository {

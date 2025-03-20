@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:minimalist_todo/home.dart';
+import 'package:minimalist_todo/view/home.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
