@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:minimalist_todo/config/theme_app.dart';
 import 'package:minimalist_todo/view/home.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -35,9 +36,7 @@ class MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'TODO App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      theme: ThemeApp.themeData,
       home: const Home(title: 'Minimalist TODO App'),
     );
   }
