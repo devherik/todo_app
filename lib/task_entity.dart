@@ -19,6 +19,8 @@ class TaskEntity extends HiveObject {
   final String description;
   @HiveField(2)
   bool isCompleted;
+  @HiveField(3)
+  int index = 0;
 
   TaskEntity({
     required this.title,
@@ -26,14 +28,20 @@ class TaskEntity extends HiveObject {
     required this.isCompleted,
   });
 
-  TaskEntity.fromJson(Map<String, dynamic> json)
+  TaskEntity.fromJson(Map<dynamic, dynamic> json)
     : title = json['title'],
       description = json['description'],
-      isCompleted = json['isCompleted'];
+      isCompleted = json['isCompleted'],
+      index = json['index'];
 
-  Map<String, dynamic> toJson() => {
+  void setIndex(int index) {
+    this.index = index;
+  }
+
+  Map<dynamic, dynamic> toJson() => {
     'title': title,
     'description': description,
     'isCompleted': isCompleted,
+    'index': index,
   };
 }

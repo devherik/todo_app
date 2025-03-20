@@ -7,7 +7,8 @@ import 'package:result_dart/result_dart.dart';
 class HomeRepository {
   HomeRepository._();
   static HomeRepository? _instance;
-  late Box box;
+  late Box tasksBox;
+  late Box indexBox;
 
   //avoid the re-creation of the
   //object by making the
@@ -29,7 +30,11 @@ class HomeRepository {
       //register the adapter, must be done before
       //opening the box
       Hive.registerAdapter(TaskEntityAdapter());
-      box = await Hive.openBox('tasks');
+      tasksBox = await Hive.openBox('tasks');
+      indexBox = await Hive.openBox('index');
+      await tasksBox.clear();
+      await indexBox.clear();
+      await indexBox.put('index', 0);
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);
@@ -39,7 +44,7 @@ class HomeRepository {
   Future<Result<List<TaskEntity>, Exception>> getTasks() async {
     final List<TaskEntity> tasks = [];
     try {
-      final data = box.values;
+      final data = tasksBox.values;
       for (final item in data) {
         tasks.add(TaskEntity.fromJson(item));
       }
@@ -50,8 +55,11 @@ class HomeRepository {
   }
 
   Future<Result<bool, Exception>> addTask(TaskEntity task) async {
+    int tasksCount = indexBox.get('index');
     try {
-      await box.add(task.toJson());
+      task.setIndex(tasksCount++);
+      await tasksBox.add(task.toJson());
+      await indexBox.put('index', tasksCount);
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);
@@ -60,7 +68,7 @@ class HomeRepository {
 
   Future<Result<bool, Exception>> removeTask(TaskEntity task) async {
     try {
-      await box.deleteAt(box.values.toList().indexOf(task.toJson()));
+      await tasksBox.deleteAt(tasksBox.values.toList().indexOf(task.toJson()));
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);
@@ -69,11 +77,13 @@ class HomeRepository {
 
   Future<Result<bool, Exception>> toggleTask(TaskEntity task) async {
     try {
-      final index = box.values.toList().indexOf(task.toJson());
-      final data = box.getAt(index);
-      final updatedTask = TaskEntity.fromJson(data);
+      final data = tasksBox.values.toList();
+      final index = data.indexWhere(
+        (element) => element['index'] == task.index,
+      );
+      final updatedTask = TaskEntity.fromJson(data[index]);
       updatedTask.isCompleted = !updatedTask.isCompleted;
-      await box.putAt(index, updatedTask.toJson());
+      await tasksBox.putAt(index, updatedTask.toJson());
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);

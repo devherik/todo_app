@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:minimalist_todo/home_repository.dart';
+import 'package:minimalist_todo/main.dart';
 import 'package:minimalist_todo/task_entity.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
-  HomeViewmodel() : super([]);
+  HomeViewmodel(this.context) : super([]);
+  final BuildContext context;
 
   final HomeRepository _repository = HomeRepository.getInstance();
 
@@ -15,34 +15,44 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
     await _repository
         .getTasks()
         .onSuccess((success) => value = success)
-        .onFailure((failure) => log(failure.toString()));
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
   }
 
   Future<void> update() async {
     await _repository
         .getTasks()
         .onSuccess((success) => value = success)
-        .onFailure((failure) => log(failure.toString()));
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
   }
 
   Future<void> addTask(TaskEntity task) async {
     await _repository
         .addTask(task)
         .onSuccess((success) => update())
-        .onFailure((failure) => log(failure.toString()));
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
   }
 
   Future<void> removeTask(TaskEntity task) async {
     await _repository
         .removeTask(task)
         .onSuccess((success) => update())
-        .onFailure((failure) => log(failure.toString()));
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
   }
 
   Future<void> toggleTask(TaskEntity task) async {
     await _repository
         .toggleTask(task)
         .onSuccess((success) => update())
-        .onFailure((failure) => log(failure.toString()));
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
   }
 }
