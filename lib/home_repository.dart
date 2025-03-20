@@ -32,9 +32,6 @@ class HomeRepository {
       Hive.registerAdapter(TaskEntityAdapter());
       tasksBox = await Hive.openBox('tasks');
       indexBox = await Hive.openBox('index');
-      await tasksBox.clear();
-      await indexBox.clear();
-      await indexBox.put('index', 0);
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);
@@ -55,7 +52,7 @@ class HomeRepository {
   }
 
   Future<Result<bool, Exception>> addTask(TaskEntity task) async {
-    int tasksCount = indexBox.get('index');
+    int tasksCount = indexBox.get('index', defaultValue: 0);
     try {
       task.setIndex(tasksCount++);
       await tasksBox.add(task.toJson());
