@@ -7,7 +7,7 @@ abstract class ThemeApp {
     return ThemeData(
       scaffoldBackgroundColor: globals.primaryLightColor,
       appBarTheme: AppBarTheme(
-        backgroundColor: globals.primaryDarkColor,
+        backgroundColor: globals.primaryLightColor,
         iconTheme: IconThemeData(color: globals.neutralColor),
         centerTitle: true,
       ),
@@ -61,17 +61,17 @@ abstract class ThemeApp {
         labelLarge: GoogleFonts.roboto(
           fontSize: 16,
           letterSpacing: 2,
-          color: globals.primaryDarkColor.withAlpha(800),
+          color: globals.primaryDarkColor.withAlpha(200),
         ),
         labelMedium: GoogleFonts.roboto(
           fontSize: 12,
           letterSpacing: 2,
-          color: globals.primaryDarkColor.withAlpha(800),
+          color: globals.primaryDarkColor.withAlpha(200),
         ),
         labelSmall: GoogleFonts.roboto(
           fontSize: 8,
           letterSpacing: 2,
-          color: globals.primaryDarkColor.withAlpha(800),
+          color: globals.primaryDarkColor.withAlpha(200),
         ),
       ),
     );

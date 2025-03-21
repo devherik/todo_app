@@ -32,7 +32,7 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
   Future<void> addTask(TaskEntity task) async {
     await _repository
         .addTask(task)
-        .onSuccess((success) => update())
+        .onSuccess((success) async => await update())
         .onFailure(
           (failure) => MyApp.of(context)!.showToaster(failure.toString()),
         );
@@ -41,7 +41,9 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
   Future<void> removeTask(TaskEntity task) async {
     await _repository
         .removeTask(task)
-        .onSuccess((success) => update())
+        .onSuccess((success) async {
+          await update();
+        })
         .onFailure(
           (failure) => MyApp.of(context)!.showToaster(failure.toString()),
         );
@@ -50,7 +52,7 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
   Future<void> toggleTask(TaskEntity task) async {
     await _repository
         .toggleTask(task)
-        .onSuccess((success) => update())
+        .onSuccess((success) async => await update())
         .onFailure(
           (failure) => MyApp.of(context)!.showToaster(failure.toString()),
         );
