@@ -67,7 +67,7 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
                 globals.largeBoxSpace,
                 _buildFormField(titleController, 'Título', 1, 15),
                 globals.verySmallBoxSpace,
-                _buildFormField(descriptionController, 'Descrição', 2, 30),
+                _buildFormField(descriptionController, 'Descrição', 2, 80),
               ],
             ),
           ),
@@ -126,6 +126,7 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
                             title: titleController.text.trim(),
                             description: descriptionController.text.trim(),
                             isCompleted: false,
+                            createdAt: DateTime.now(),
                           ),
                         )
                         .whenComplete(() {

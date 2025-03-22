@@ -2,6 +2,10 @@ import 'package:hive_flutter/adapters.dart';
 
 //name provided by the generator to the adapter
 //this name is used to generate the file name
+//to generate the adapter run:
+//flutter packages pub run build_runner build
+//this will generate the file task_entity.g.dart
+//in the same directory as this file
 part 'task_entity.g.dart';
 
 //HiveType annotation is used to generate the adapter
@@ -21,18 +25,22 @@ class TaskEntity extends HiveObject {
   bool isCompleted;
   @HiveField(3)
   int index = 0;
+  @HiveField(4)
+  final DateTime? createdAt;
 
   TaskEntity({
     required this.title,
     required this.description,
     required this.isCompleted,
+    required this.createdAt,
   });
 
   TaskEntity.fromJson(Map<dynamic, dynamic> json)
     : title = json['title'],
       description = json['description'],
       isCompleted = json['isCompleted'],
-      index = json['index'];
+      index = json['index'],
+      createdAt = json['createdAt'];
 
   void setIndex(int index) {
     this.index = index;
@@ -43,5 +51,6 @@ class TaskEntity extends HiveObject {
     'description': description,
     'isCompleted': isCompleted,
     'index': index,
+    'createdAt': createdAt,
   };
 }
