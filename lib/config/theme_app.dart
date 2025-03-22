@@ -8,8 +8,8 @@ abstract class ThemeApp {
       scaffoldBackgroundColor: globals.primaryLightColor,
       appBarTheme: AppBarTheme(
         backgroundColor: globals.primaryLightColor,
-        iconTheme: IconThemeData(color: globals.neutralColor),
-        centerTitle: true,
+        iconTheme: IconThemeData(color: globals.terciaryLightColor),
+        actionsIconTheme: IconThemeData(color: globals.terciaryLightColor),
       ),
 
       colorScheme: ColorScheme(
@@ -26,6 +26,7 @@ abstract class ThemeApp {
         tertiary: globals.terciaryLightColor,
         inversePrimary: globals.primaryDarkColor,
         inverseSurface: globals.secondaryDarkColor,
+        scrim: globals.neutralColor,
       ),
       textTheme: TextTheme(
         titleLarge: GoogleFonts.ubuntu(
