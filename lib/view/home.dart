@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:minimalist_todo/view/addtask_modal_widget.dart';
+import 'package:minimalist_todo/view/listitem_widget.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
 
@@ -14,18 +15,13 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> {
   late HomeViewmodel _viewmodel;
-  late AnimationController _animationController;
 
   @override
   void initState() {
     _viewmodel = HomeViewmodel(context);
     _viewmodel.initialize();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
     super.initState();
   }
 
@@ -33,15 +29,34 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: MediaQuery.of(context).size.height * 0.15,
         centerTitle: false,
-        title: Text('Tarefas', style: Theme.of(context).textTheme.titleSmall),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Minhas tarefas',
+              style: GoogleFonts.ubuntu(
+                fontSize: 24,
+                letterSpacing: 2,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
+            Text(
+              'ativas',
+              style: GoogleFonts.ubuntu(
+                fontSize: 24,
+                letterSpacing: 2,
+                color: Theme.of(context).colorScheme.tertiary.withAlpha(150),
+              ),
+            ),
+          ],
+        ),
         actions: [
           Builder(
             builder:
                 (context) => IconButton(
-                  onPressed: () {
-                    Scaffold.of(context).openEndDrawer();
-                  },
+                  onPressed: () {},
                   icon: Icon(Icons.menu_rounded),
                 ),
           ),
@@ -81,7 +96,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       onDismissed: (direction) async {
                         await _viewmodel.removeTask(task);
                       },
-                      child: _listItem(task),
+                      child: ListitemWidget(
+                        viewmodel: _viewmodel,
+                        taskEntity: task,
+                      ),
                     );
                   },
                 );
@@ -90,74 +108,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
           Expanded(flex: 1, child: _addButton()),
         ],
-      ),
-    );
-  }
-
-  Widget _listItem(TaskEntity task) {
-    Animation<double> animation = Tween<double>(begin: 60, end: 80).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-    return GestureDetector(
-      onTap: () {
-        if (_animationController.isCompleted) {
-          _animationController.reverse();
-        } else {
-          _animationController.forward();
-        }
-      },
-      child: ListTile(
-        title: Row(
-          children: [
-            Container(
-              height: animation.value,
-              width: 50,
-              color: Theme.of(context).colorScheme.tertiary,
-              child: Center(
-                child: Text(
-                  task.index.toString(),
-                  style: GoogleFonts.roboto(
-                    fontSize: 16,
-                    letterSpacing: 2,
-                    color: globals.primaryLightColor.withAlpha(200),
-                  ),
-                ),
-              ),
-            ),
-            Flexible(
-              child: Container(
-                color: Theme.of(context).colorScheme.primary,
-                height: animation.value,
-                margin: const EdgeInsets.only(left: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      task.title,
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    Text(
-                      task.description,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-        trailing: Checkbox(
-          activeColor: Theme.of(context).colorScheme.primary,
-          checkColor: Theme.of(context).colorScheme.tertiary,
-          focusColor: Theme.of(context).colorScheme.tertiary,
-          hoverColor: Theme.of(context).colorScheme.tertiary,
-          value: task.isCompleted,
-          onChanged: (value) async {
-            await _viewmodel.toggleTask(task);
-          },
-        ),
       ),
     );
   }
