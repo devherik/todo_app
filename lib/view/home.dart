@@ -47,69 +47,54 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              globals.smallBoxSpace,
-              ValueListenableBuilder<List<TaskEntity>>(
-                valueListenable: _viewmodel,
-                builder: (context, tasks, child) {
-                  return ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      final task = tasks[index];
-                      return Dismissible(
-                        key: Key(task.index.toString()),
-                        background: Container(
-                          padding: const EdgeInsets.only(right: 10, left: 10),
-                          color: Theme.of(context).colorScheme.error,
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              'Delete',
-                              style: GoogleFonts.roboto(
-                                fontSize: 16,
-                                letterSpacing: 2,
-                                color: globals.primaryDarkColor,
-                              ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          globals.smallBoxSpace,
+          Expanded(
+            flex: 6,
+            child: ValueListenableBuilder<List<TaskEntity>>(
+              valueListenable: _viewmodel,
+              builder: (context, tasks, child) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+                    return Dismissible(
+                      key: Key(task.index.toString()),
+                      background: Container(
+                        padding: const EdgeInsets.only(right: 10, left: 10),
+                        color: Theme.of(context).colorScheme.error,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            'Delete',
+                            style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              letterSpacing: 2,
+                              color: globals.primaryDarkColor,
                             ),
                           ),
                         ),
-                        onDismissed: (direction) async {
-                          await _viewmodel.removeTask(task);
-                        },
-                        child: listItem(task),
-                      );
-                    },
-                  );
-                },
-              ),
-              globals.largeBoxSpace,
-            ],
+                      ),
+                      onDismissed: (direction) async {
+                        await _viewmodel.removeTask(task);
+                      },
+                      child: _listItem(task),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-        onPressed: () async {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => AddtaskModalWidget(viewmodel: _viewmodel),
-          );
-        },
-        child: Icon(Icons.add, color: Theme.of(context).colorScheme.primary),
+          Expanded(flex: 1, child: _addButton()),
+        ],
       ),
     );
   }
 
-  Widget listItem(TaskEntity task) {
+  Widget _listItem(TaskEntity task) {
     Animation<double> animation = Tween<double>(begin: 60, end: 80).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
@@ -139,23 +124,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
-            Container(
-              color: Theme.of(context).colorScheme.primary,
-              height: animation.value,
-              margin: const EdgeInsets.only(left: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    task.title,
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  Text(
-                    task.description,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
+            Flexible(
+              child: Container(
+                color: Theme.of(context).colorScheme.primary,
+                height: animation.value,
+                margin: const EdgeInsets.only(left: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.title,
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    Text(
+                      task.description,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -171,6 +159,35 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           },
         ),
       ),
+    );
+  }
+
+  Widget _addButton() {
+    return Builder(
+      builder: (context) {
+        return MaterialButton(
+          elevation: 0,
+          minWidth: double.infinity,
+          clipBehavior: Clip.antiAlias,
+          disabledColor: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.secondary,
+          onPressed: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (context) => AddtaskModalWidget(viewmodel: _viewmodel),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32.0),
+            child: Icon(
+              Icons.add,
+              size: 30,
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+          ),
+        );
+      },
     );
   }
 }

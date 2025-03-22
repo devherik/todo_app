@@ -24,9 +24,7 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
     titleController = TextEditingController();
     descriptionController = TextEditingController();
     titleController.addListener(() {
-      setState(() {
-        areFieldsValid = titleController.text.isNotEmpty;
-      });
+      setState(() => areFieldsValid = titleController.text.isNotEmpty);
     });
     super.initState();
   }
@@ -36,17 +34,24 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.tertiary,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.tertiary),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(width: 30, height: 100, child: Divider()),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Builder(
+                builder: (context) {
+                  return IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: Icon(Icons.close),
+                  );
+                },
+              ),
+            ),
+          ),
           SingleChildScrollView(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Column(
@@ -62,7 +67,7 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
                 globals.largeBoxSpace,
                 _buildFormField(titleController, 'Título', 1, 15),
                 globals.verySmallBoxSpace,
-                _buildFormField(descriptionController, 'Descrição', 2, 30),
+                _buildFormField(descriptionController, 'Descrição', 2, 100),
               ],
             ),
           ),
