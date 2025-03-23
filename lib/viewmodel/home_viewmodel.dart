@@ -29,17 +29,13 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
         );
   }
 
-  Future<List<TaskEntity>> updateArquived() async {
-    List<TaskEntity> tasks = [];
+  Future<void> updateArquived() async {
     await _repository
         .getArquivedTasks()
-        .onSuccess((success) {
-          tasks = success;
-        })
+        .onSuccess((success) => value = success)
         .onFailure(
           (failure) => MyApp.of(context)!.showToaster(failure.toString()),
         );
-    return tasks;
   }
 
   Future<void> addTask(TaskEntity task) async {
@@ -67,6 +63,17 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
         .arquiveTask(task)
         .onSuccess((success) async {
           await update();
+        })
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
+  }
+
+  Future<void> unarquiveTask(TaskEntity task) async {
+    await _repository
+        .unarquiveTask(task)
+        .onSuccess((success) async {
+          await updateArquived();
         })
         .onFailure(
           (failure) => MyApp.of(context)!.showToaster(failure.toString()),

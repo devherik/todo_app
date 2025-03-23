@@ -17,6 +17,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late HomeViewmodel _viewmodel;
+  bool _isArquived = false;
 
   @override
   void initState() {
@@ -39,15 +40,17 @@ class _HomeState extends State<Home> {
               style: GoogleFonts.ubuntu(
                 fontSize: 24,
                 letterSpacing: 2,
-                color: Theme.of(context).colorScheme.tertiary,
+                color: Theme.of(context).colorScheme.tertiary.withAlpha(150),
               ),
             ),
+            //TODO: add an animation when changing the tasks list
             Text(
-              'Ativas',
+              _isArquived ? 'Arquivadas' : 'Ativas',
               style: GoogleFonts.ubuntu(
                 fontSize: 24,
                 letterSpacing: 2,
-                color: Theme.of(context).colorScheme.tertiary.withAlpha(150),
+                color: Theme.of(context).colorScheme.tertiary,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -56,8 +59,16 @@ class _HomeState extends State<Home> {
           Builder(
             builder:
                 (context) => IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.menu_rounded),
+                  onPressed: () async {
+                    //change the tasks list to the arquived tasks and vice versa
+                    if (!_isArquived) {
+                      await _viewmodel.updateArquived();
+                    } else {
+                      await _viewmodel.update();
+                    }
+                    setState(() => _isArquived = !_isArquived);
+                  },
+                  icon: Icon(Icons.change_circle_outlined),
                 ),
           ),
         ],
@@ -84,7 +95,7 @@ class _HomeState extends State<Home> {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'Arquivar',
+                            _isArquived ? 'Restaurar' : 'Arquivar',
                             style: GoogleFonts.roboto(
                               fontSize: 12,
                               letterSpacing: 2,
@@ -110,7 +121,9 @@ class _HomeState extends State<Home> {
                       ),
                       onDismissed: (direction) async {
                         if (direction == DismissDirection.startToEnd) {
-                          await _viewmodel.arquiveTask(task);
+                          _isArquived
+                              ? await _viewmodel.unarquiveTask(task)
+                              : await _viewmodel.arquiveTask(task);
                         } else {
                           await _viewmodel.removeTask(task);
                         }

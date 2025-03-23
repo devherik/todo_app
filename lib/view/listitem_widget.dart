@@ -31,12 +31,27 @@ class _ListitemWidgetState extends State<ListitemWidget> {
             _heigth == 80
                 ? Theme.of(context).colorScheme.primary
                 : Theme.of(context).colorScheme.scrim,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildTitle(),
-            _heigth == 150 ? Text(widget._taskEntity.description) : Container(),
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildTitle(),
+                  _heigth == 150
+                      ? const SizedBox(height: 8, child: Divider())
+                      : Container(),
+                  _heigth == 150 ? _buildDescription() : Container(),
+                ],
+              ),
+            ),
+            _heigth == 150
+                ? Expanded(flex: 1, child: _toggleTask())
+                : Container(),
           ],
         ),
       ),
@@ -48,14 +63,41 @@ class _ListitemWidgetState extends State<ListitemWidget> {
       children: [
         Text(
           widget._taskEntity.title,
-          style: Theme.of(context).textTheme.labelLarge,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
         const Spacer(),
-        Text(
-          widget._taskEntity.isCompleted ? 'Concluída' : 'Ativa',
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        _heigth == 80
+            ? Text(
+              widget._taskEntity.isCompleted ? 'Concluída' : 'Ativa',
+              style: Theme.of(context).textTheme.labelMedium,
+            )
+            : Text(
+              widget._taskEntity.getDatetime,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
       ],
+    );
+  }
+
+  Widget _buildDescription() {
+    return Text(
+      widget._taskEntity.description,
+      overflow: TextOverflow.clip,
+      style: Theme.of(context).textTheme.labelMedium,
+    );
+  }
+
+  Widget _toggleTask() {
+    return IconButton(
+      onPressed: () async {
+        widget._taskEntity.isCompleted = !widget._taskEntity.isCompleted;
+        await widget._viewmodel.toggleTask(widget._taskEntity);
+      },
+      icon: Icon(
+        widget._taskEntity.isCompleted
+            ? Icons.check_circle
+            : Icons.circle_outlined,
+      ),
     );
   }
 }

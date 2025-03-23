@@ -34,10 +34,23 @@ class HomeRepository {
       tasksBox = await Hive.openBox('tasks');
       indexBox = await Hive.openBox('index');
       arquivedBox = await Hive.openBox('arquived');
+      //await clear();
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);
     }
+  }
+
+  Future<void> close() async {
+    await tasksBox.close();
+    await indexBox.close();
+    await arquivedBox.close();
+  }
+
+  Future<void> clear() async {
+    await tasksBox.clear();
+    await indexBox.clear();
+    await arquivedBox.clear();
   }
 
   Future<Result<List<TaskEntity>, Exception>> getTasks() async {
@@ -99,6 +112,20 @@ class HomeRepository {
       );
       await arquivedBox.add(data[index]);
       await tasksBox.deleteAt(index);
+      return Success(true);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<bool, Exception>> unarquiveTask(TaskEntity task) async {
+    try {
+      final data = arquivedBox.values.toList();
+      final index = data.indexWhere(
+        (element) => element['index'] == task.index,
+      );
+      await tasksBox.add(data[index]);
+      await arquivedBox.deleteAt(index);
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);

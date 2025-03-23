@@ -46,6 +46,10 @@ class TaskEntity extends HiveObject {
     this.index = index;
   }
 
+  String get getDatetime {
+    return '${createdAt!.day}/${createdAt!.month}/${createdAt!.year}';
+  }
+
   Map<dynamic, dynamic> toJson() => {
     'title': title,
     'description': description,
