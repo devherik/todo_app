@@ -35,14 +35,27 @@ class _ListitemWidgetState extends State<ListitemWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              widget._taskEntity.title,
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            _buildTitle(),
             _heigth == 150 ? Text(widget._taskEntity.description) : Container(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return Row(
+      children: [
+        Text(
+          widget._taskEntity.title,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const Spacer(),
+        Text(
+          widget._taskEntity.isCompleted ? 'Concluída' : 'Ativa',
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+      ],
     );
   }
 }

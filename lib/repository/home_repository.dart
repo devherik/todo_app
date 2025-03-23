@@ -9,6 +9,7 @@ class HomeRepository {
   static HomeRepository? _instance;
   late Box tasksBox;
   late Box indexBox;
+  late Box arquivedBox;
 
   //avoid the re-creation of the
   //object by making the
@@ -32,6 +33,7 @@ class HomeRepository {
       Hive.registerAdapter(TaskEntityAdapter());
       tasksBox = await Hive.openBox('tasks');
       indexBox = await Hive.openBox('index');
+      arquivedBox = await Hive.openBox('arquived');
       return Success(true);
     } on Exception catch (e) {
       return Failure(e);
@@ -42,6 +44,19 @@ class HomeRepository {
     final List<TaskEntity> tasks = [];
     try {
       final data = tasksBox.values;
+      for (final item in data) {
+        tasks.add(TaskEntity.fromJson(item));
+      }
+      return Success(tasks);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<List<TaskEntity>, Exception>> getArquivedTasks() async {
+    final List<TaskEntity> tasks = [];
+    try {
+      final data = arquivedBox.values;
       for (final item in data) {
         tasks.add(TaskEntity.fromJson(item));
       }
@@ -69,6 +84,20 @@ class HomeRepository {
       final index = data.indexWhere(
         (element) => element['index'] == task.index,
       );
+      await tasksBox.deleteAt(index);
+      return Success(true);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
+
+  Future<Result<bool, Exception>> arquiveTask(TaskEntity task) async {
+    try {
+      final data = tasksBox.values.toList();
+      final index = data.indexWhere(
+        (element) => element['index'] == task.index,
+      );
+      await arquivedBox.add(data[index]);
       await tasksBox.deleteAt(index);
       return Success(true);
     } on Exception catch (e) {

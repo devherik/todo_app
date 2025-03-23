@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             Text(
-              'ativas',
+              'Ativas',
               style: GoogleFonts.ubuntu(
                 fontSize: 24,
                 letterSpacing: 2,
@@ -80,13 +80,28 @@ class _HomeState extends State<Home> {
                       key: Key(task.index.toString()),
                       background: Container(
                         padding: const EdgeInsets.only(right: 10, left: 10),
+                        color: Theme.of(context).colorScheme.secondary,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Arquivar',
+                            style: GoogleFonts.roboto(
+                              fontSize: 12,
+                              letterSpacing: 2,
+                              color: globals.primaryDarkColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                      secondaryBackground: Container(
+                        padding: const EdgeInsets.only(right: 10, left: 10),
                         color: Theme.of(context).colorScheme.error,
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            'Delete',
+                            'Apagar',
                             style: GoogleFonts.roboto(
-                              fontSize: 16,
+                              fontSize: 12,
                               letterSpacing: 2,
                               color: globals.primaryDarkColor,
                             ),
@@ -94,8 +109,13 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       onDismissed: (direction) async {
-                        await _viewmodel.removeTask(task);
+                        if (direction == DismissDirection.startToEnd) {
+                          await _viewmodel.arquiveTask(task);
+                        } else {
+                          await _viewmodel.removeTask(task);
+                        }
                       },
+                      behavior: HitTestBehavior.translucent,
                       child: ListitemWidget(
                         viewmodel: _viewmodel,
                         taskEntity: task,
