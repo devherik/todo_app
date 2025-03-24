@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 
@@ -32,14 +33,25 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
   Widget build(BuildContext context) {
     return AlertDialog(
       scrollable: true,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text('Nova tarefa', style: Theme.of(context).textTheme.titleSmall),
-          Divider(color: Theme.of(context).colorScheme.tertiary),
+          Builder(
+            builder:
+                (context) => IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: Icon(
+                    Iconsax.close_circle,
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+          ),
         ],
       ),
       actions: <Widget>[_buildButton()],
@@ -49,6 +61,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            globals.largeBoxSpace,
             _buildFormField(titleController, 'Título', 1, 18),
             globals.verySmallBoxSpace,
             _buildFormField(descriptionController, 'Descrição', 5, 80),
@@ -114,7 +127,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
           elevation: 0,
           minWidth: double.infinity,
           clipBehavior: Clip.antiAlias,
-          disabledColor: Theme.of(context).colorScheme.secondary,
+          disabledColor: Theme.of(context).colorScheme.primary,
           color: Theme.of(context).colorScheme.scrim,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
+
+import 'package:minimalist_todo/config/globals_app.dart' as globals;
 
 class ListitemWidget extends StatefulWidget {
   const ListitemWidget({
@@ -25,16 +28,21 @@ class _ListitemWidgetState extends State<ListitemWidget> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: _heigth,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        margin: const EdgeInsets.all(8),
         width: MediaQuery.of(context).size.width,
-        color:
-            _heigth == 80
-                ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.scrim,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color:
+              _heigth == 80
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.white70,
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            Flexible(child: _toggleTask()),
             Expanded(
               flex: 3,
               child: Column(
@@ -42,16 +50,11 @@ class _ListitemWidgetState extends State<ListitemWidget> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildTitle(),
-                  _heigth == 150
-                      ? const SizedBox(height: 8, child: Divider())
-                      : Container(),
+                  const SizedBox(height: 8, child: Divider()),
                   _heigth == 150 ? _buildDescription() : Container(),
                 ],
               ),
             ),
-            _heigth == 150
-                ? Expanded(flex: 1, child: _toggleTask())
-                : Container(),
           ],
         ),
       ),
@@ -66,15 +69,10 @@ class _ListitemWidgetState extends State<ListitemWidget> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const Spacer(),
-        _heigth == 80
-            ? Text(
-              widget._taskEntity.isCompleted ? 'Concluída' : 'Ativa',
-              style: Theme.of(context).textTheme.labelMedium,
-            )
-            : Text(
-              widget._taskEntity.getDatetime,
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
+        Text(
+          widget._taskEntity.getDatetime,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
       ],
     );
   }
@@ -93,10 +91,10 @@ class _ListitemWidgetState extends State<ListitemWidget> {
         widget._taskEntity.isCompleted = !widget._taskEntity.isCompleted;
         await widget._viewmodel.toggleTask(widget._taskEntity);
       },
+      padding: const EdgeInsets.all(16),
+      color: Theme.of(context).colorScheme.tertiary,
       icon: Icon(
-        widget._taskEntity.isCompleted
-            ? Icons.check_circle
-            : Icons.circle_outlined,
+        widget._taskEntity.isCompleted ? Iconsax.verify : Icons.circle_outlined,
       ),
     );
   }

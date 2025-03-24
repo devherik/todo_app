@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:minimalist_todo/view/add_task_widget.dart';
 import 'package:minimalist_todo/view/listitem_widget.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
@@ -73,81 +74,92 @@ class _HomeState extends State<Home> {
                     }
                     setState(() => _isArquived = !_isArquived);
                   },
-                  icon: Icon(Icons.change_circle_outlined),
+                  icon: Icon(Iconsax.arrow_swap_horizontal),
                 ),
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          globals.smallBoxSpace,
-          Expanded(
-            flex: 6,
-            child: ValueListenableBuilder<List<TaskEntity>>(
-              valueListenable: _viewmodel,
-              builder: (context, tasks, child) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = tasks[index];
-                    return Dismissible(
-                      key: Key(task.index.toString()),
-                      background: Container(
-                        padding: const EdgeInsets.only(right: 10, left: 10),
-                        color: globals.blue,
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _isArquived ? 'Restaurar' : 'Arquivar',
-                            style: GoogleFonts.roboto(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                              color: globals.primaryDarkColor,
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            globals.smallBoxSpace,
+            Expanded(
+              flex: 6,
+              child: ValueListenableBuilder<List<TaskEntity>>(
+                valueListenable: _viewmodel,
+                builder: (context, tasks, child) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: tasks.length,
+                    itemBuilder: (context, index) {
+                      final task = tasks[index];
+                      return Dismissible(
+                        key: Key(task.index.toString()),
+                        background: Container(
+                          padding: const EdgeInsets.only(right: 10, left: 10),
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: globals.blue,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _isArquived ? 'Restaurar' : 'Arquivar',
+                              style: GoogleFonts.roboto(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                                color: globals.primaryDarkColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      secondaryBackground: Container(
-                        padding: const EdgeInsets.only(right: 10, left: 10),
-                        color: Theme.of(context).colorScheme.error,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            'Apagar',
-                            style: GoogleFonts.roboto(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
-                              color: globals.primaryDarkColor,
+                        secondaryBackground: Container(
+                          padding: const EdgeInsets.only(right: 10, left: 10),
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: globals.red,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'Apagar',
+                              style: GoogleFonts.roboto(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                                color: globals.primaryDarkColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      onDismissed: (direction) async {
-                        if (direction == DismissDirection.startToEnd) {
-                          _isArquived
-                              ? await _viewmodel.unarquiveTask(task)
-                              : await _viewmodel.arquiveTask(task);
-                        } else {
-                          await _viewmodel.removeTask(task);
-                        }
-                      },
-                      behavior: HitTestBehavior.translucent,
-                      child: ListitemWidget(
-                        viewmodel: _viewmodel,
-                        taskEntity: task,
-                      ),
-                    );
-                  },
-                );
-              },
+                        onDismissed: (direction) async {
+                          if (direction == DismissDirection.startToEnd) {
+                            _isArquived
+                                ? await _viewmodel.unarquiveTask(task)
+                                : await _viewmodel.arquiveTask(task);
+                          } else {
+                            await _viewmodel.removeTask(task);
+                          }
+                        },
+                        behavior: HitTestBehavior.translucent,
+                        child: ListitemWidget(
+                          viewmodel: _viewmodel,
+                          taskEntity: task,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-          Expanded(flex: 1, child: _addButton()),
-        ],
+            _addButton(),
+          ],
+        ),
       ),
     );
   }
@@ -156,11 +168,13 @@ class _HomeState extends State<Home> {
     return Builder(
       builder: (context) {
         return MaterialButton(
-          elevation: 0,
-          minWidth: double.infinity,
-          clipBehavior: Clip.antiAlias,
-          disabledColor: Theme.of(context).colorScheme.secondary,
+          elevation: 2,
+          minWidth: MediaQuery.of(context).size.width * .4,
+          height: 75,
           color: Theme.of(context).colorScheme.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
           onPressed: () {
             showDialog(
               context: context,
@@ -168,13 +182,10 @@ class _HomeState extends State<Home> {
               builder: (context) => AddTaskWidget(viewmodel: _viewmodel),
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32.0),
-            child: Icon(
-              Icons.add,
-              size: 30,
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
+          child: Icon(
+            Iconsax.add,
+            size: 24,
+            color: Theme.of(context).colorScheme.tertiary,
           ),
         );
       },
