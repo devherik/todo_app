@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:minimalist_todo/view/addtask_modal_widget.dart';
+import 'package:minimalist_todo/view/add_task_widget.dart';
 import 'package:minimalist_todo/view/listitem_widget.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
@@ -34,7 +34,8 @@ class _HomeState extends State<Home> {
         centerTitle: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
             Text(
               'Minhas tarefas',
               style: GoogleFonts.ubuntu(
@@ -52,6 +53,10 @@ class _HomeState extends State<Home> {
                 color: Theme.of(context).colorScheme.tertiary,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            Divider(
+              thickness: 6,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
           ],
         ),
@@ -91,13 +96,14 @@ class _HomeState extends State<Home> {
                       key: Key(task.index.toString()),
                       background: Container(
                         padding: const EdgeInsets.only(right: 10, left: 10),
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: globals.blue,
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             _isArquived ? 'Restaurar' : 'Arquivar',
                             style: GoogleFonts.roboto(
                               fontSize: 12,
+                              fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                               color: globals.primaryDarkColor,
                             ),
@@ -113,6 +119,7 @@ class _HomeState extends State<Home> {
                             'Apagar',
                             style: GoogleFonts.roboto(
                               fontSize: 12,
+                              fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                               color: globals.primaryDarkColor,
                             ),
@@ -155,10 +162,10 @@ class _HomeState extends State<Home> {
           disabledColor: Theme.of(context).colorScheme.secondary,
           color: Theme.of(context).colorScheme.secondary,
           onPressed: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
+            showDialog(
               context: context,
-              builder: (context) => AddtaskModalWidget(viewmodel: _viewmodel),
+              useSafeArea: true,
+              builder: (context) => AddTaskWidget(viewmodel: _viewmodel),
             );
           },
           child: Padding(

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 
 import 'package:minimalist_todo/config/globals_app.dart' as globals;
 
-class AddtaskModalWidget extends StatefulWidget {
-  const AddtaskModalWidget({super.key, required HomeViewmodel viewmodel})
+class AddTaskWidget extends StatefulWidget {
+  const AddTaskWidget({super.key, required HomeViewmodel viewmodel})
     : _viewmodel = viewmodel;
   final HomeViewmodel _viewmodel;
 
   @override
-  State<AddtaskModalWidget> createState() => _AddtaskModalWidgetState();
+  State<AddTaskWidget> createState() => _AddTaskWidgetState();
 }
 
-class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
+class _AddTaskWidgetState extends State<AddTaskWidget> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
   bool areFieldsValid = false;
@@ -31,50 +30,33 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(color: Theme.of(context).colorScheme.tertiary),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Builder(
-                builder: (context) {
-                  return IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.close),
-                  );
-                },
-              ),
-            ),
-          ),
-          SingleChildScrollView(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            child: Column(
-              children: [
-                Text(
-                  'Crie uma nova tarefa.',
-                  style: GoogleFonts.ubuntu(
-                    fontSize: 24,
-                    letterSpacing: 2,
-                    color: globals.primaryLightColor,
-                  ),
-                ),
-                globals.largeBoxSpace,
-                _buildFormField(titleController, 'Título', 1, 15),
-                globals.verySmallBoxSpace,
-                _buildFormField(descriptionController, 'Descrição', 2, 80),
-              ],
-            ),
-          ),
-          globals.smallBoxSpace,
-          _buildButton(),
+    return AlertDialog(
+      scrollable: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text('Nova tarefa', style: Theme.of(context).textTheme.titleSmall),
+          Divider(color: Theme.of(context).colorScheme.tertiary),
         ],
       ),
+      actions: <Widget>[_buildButton()],
+      actionsPadding: const EdgeInsets.all(0),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            _buildFormField(titleController, 'Título', 1, 18),
+            globals.verySmallBoxSpace,
+            _buildFormField(descriptionController, 'Descrição', 5, 80),
+            globals.smallBoxSpace,
+          ],
+        ),
+      ),
+      contentPadding: const EdgeInsets.all(16),
     );
   }
 
@@ -90,19 +72,36 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
         controller: controller,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        style: Theme.of(context).textTheme.bodyLarge,
         maxLength: maxLength,
         maxLines: lines,
         decoration: InputDecoration(
-          hintText: hintText,
+          labelText: hintText,
+          labelStyle: Theme.of(context).textTheme.labelLarge,
+          counterStyle: TextStyle(
+            fontSize: 10,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
           suffix: Builder(
             builder:
                 (context) => IconButton(
                   onPressed: () => controller.clear(),
-                  icon: Icon(Icons.clear),
+                  icon: Icon(
+                    Icons.clear,
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
                 ),
           ),
-          border: UnderlineInputBorder(),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+          ),
         ),
       ),
     );
@@ -117,6 +116,12 @@ class _AddtaskModalWidgetState extends State<AddtaskModalWidget> {
           clipBehavior: Clip.antiAlias,
           disabledColor: Theme.of(context).colorScheme.secondary,
           color: Theme.of(context).colorScheme.scrim,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(16),
+              bottomRight: Radius.circular(16),
+            ),
+          ),
           onPressed:
               areFieldsValid
                   ? () async {
