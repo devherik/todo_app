@@ -29,7 +29,6 @@ class _ListitemWidgetState extends State<ListitemWidget> {
         duration: const Duration(milliseconds: 200),
         height: _heigth,
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        margin: const EdgeInsets.all(8),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

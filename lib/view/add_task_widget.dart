@@ -31,45 +31,46 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      scrollable: true,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text('Nova tarefa', style: Theme.of(context).textTheme.titleSmall),
-          Builder(
-            builder:
-                (context) => IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(
-                    Iconsax.close_circle,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-          ),
-        ],
-      ),
-      actions: <Widget>[_buildButton()],
-      actionsPadding: const EdgeInsets.all(0),
-      content: SizedBox(
-        width: MediaQuery.of(context).size.width,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: MediaQuery.of(context).size.height,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Builder(
+                builder:
+                    (context) => IconButton(
+                      onPressed: () async {
+                        if (titleController.text.isNotEmpty) {
+                          await widget._viewmodel.addTask(
+                            TaskEntity(
+                              title: titleController.text.trim(),
+                              description: descriptionController.text.trim(),
+                              isCompleted: false,
+                              createdAt: DateTime.now(),
+                            ),
+                          );
+                        }
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pop();
+                      },
+                      icon: Icon(
+                        Iconsax.arrow_left,
+                        color: Theme.of(context).colorScheme.tertiary,
+                      ),
+                    ),
+              ),
+            ),
             globals.largeBoxSpace,
             _buildFormField(titleController, 'Título', 1, 18),
-            globals.verySmallBoxSpace,
-            _buildFormField(descriptionController, 'Descrição', 5, 80),
+            _buildFormField(descriptionController, 'Descrição', 7, 100),
             globals.smallBoxSpace,
           ],
         ),
       ),
-      contentPadding: const EdgeInsets.all(16),
     );
   }
 
@@ -81,39 +82,33 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: TextField(
+      child: TextFormField(
+        focusNode: FocusNode(),
+        autofocus: true,
         controller: controller,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
-        style: Theme.of(context).textTheme.bodyLarge,
+        style:
+            hintText == 'Título'
+                ? Theme.of(context).textTheme.titleSmall
+                : Theme.of(context).textTheme.bodyLarge,
         maxLength: maxLength,
         maxLines: lines,
         decoration: InputDecoration(
-          labelText: hintText,
-          labelStyle: Theme.of(context).textTheme.labelLarge,
-          counterStyle: TextStyle(
-            fontSize: 10,
-            color: Theme.of(context).colorScheme.tertiary,
+          counter: SizedBox(),
+          hintText: hintText,
+          hintStyle:
+              hintText == 'Título'
+                  ? Theme.of(context).textTheme.titleSmall
+                  : Theme.of(context).textTheme.bodyLarge,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
           ),
-          suffix: Builder(
-            builder:
-                (context) => IconButton(
-                  onPressed: () => controller.clear(),
-                  icon: Icon(
-                    Icons.clear,
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
           ),
         ),
       ),

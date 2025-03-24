@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -99,7 +99,6 @@ class _HomeState extends State<Home> {
                         key: Key(task.index.toString()),
                         background: Container(
                           padding: const EdgeInsets.only(right: 10, left: 10),
-                          margin: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: globals.blue,
                             borderRadius: BorderRadius.circular(8),
@@ -119,7 +118,6 @@ class _HomeState extends State<Home> {
                         ),
                         secondaryBackground: Container(
                           padding: const EdgeInsets.only(right: 10, left: 10),
-                          margin: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: globals.red,
                             borderRadius: BorderRadius.circular(8),
@@ -169,16 +167,20 @@ class _HomeState extends State<Home> {
       builder: (context) {
         return MaterialButton(
           elevation: 2,
-          minWidth: MediaQuery.of(context).size.width * .4,
-          height: 75,
+          minWidth: MediaQuery.of(context).size.width * .35,
+          height: 65,
           color: Theme.of(context).colorScheme.secondary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
           ),
           onPressed: () {
-            showDialog(
+            showModalBottomSheet(
               context: context,
-              useSafeArea: true,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              enableDrag: false,
+              isDismissible: true,
+              useSafeArea: false,
+              isScrollControlled: true,
               builder: (context) => AddTaskWidget(viewmodel: _viewmodel),
             );
           },
