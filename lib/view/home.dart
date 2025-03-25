@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:minimalist_todo/view/add_task_widget.dart';
+import 'package:minimalist_todo/view/task_widget.dart';
 import 'package:minimalist_todo/view/listitem_widget.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
@@ -95,59 +95,62 @@ class _HomeState extends State<Home> {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];
-                      return Dismissible(
-                        key: Key(task.index.toString()),
-                        background: Container(
-                          padding: const EdgeInsets.only(right: 10, left: 10),
-                          decoration: BoxDecoration(
-                            color: globals.blue,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              _isArquived ? 'Restaurar' : 'Arquivar',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                                color: globals.primaryDarkColor,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Dismissible(
+                          key: Key(task.index.toString()),
+                          background: Container(
+                            padding: const EdgeInsets.only(right: 10, left: 10),
+                            decoration: BoxDecoration(
+                              color: globals.blue,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                _isArquived ? 'Restaurar' : 'Arquivar',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                  color: globals.primaryDarkColor,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        secondaryBackground: Container(
-                          padding: const EdgeInsets.only(right: 10, left: 10),
-                          decoration: BoxDecoration(
-                            color: globals.red,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text(
-                              'Apagar',
-                              style: GoogleFonts.roboto(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                                color: globals.primaryDarkColor,
+                          secondaryBackground: Container(
+                            padding: const EdgeInsets.only(right: 10, left: 10),
+                            decoration: BoxDecoration(
+                              color: globals.red,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                'Apagar',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                  color: globals.primaryDarkColor,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        onDismissed: (direction) async {
-                          if (direction == DismissDirection.startToEnd) {
-                            _isArquived
-                                ? await _viewmodel.unarquiveTask(task)
-                                : await _viewmodel.arquiveTask(task);
-                          } else {
-                            await _viewmodel.removeTask(task);
-                          }
-                        },
-                        behavior: HitTestBehavior.translucent,
-                        child: ListitemWidget(
-                          viewmodel: _viewmodel,
-                          taskEntity: task,
+                          onDismissed: (direction) async {
+                            if (direction == DismissDirection.startToEnd) {
+                              _isArquived
+                                  ? await _viewmodel.unarquiveTask(task)
+                                  : await _viewmodel.arquiveTask(task);
+                            } else {
+                              await _viewmodel.removeTask(task);
+                            }
+                          },
+                          behavior: HitTestBehavior.translucent,
+                          child: ListitemWidget(
+                            viewmodel: _viewmodel,
+                            taskEntity: task,
+                          ),
                         ),
                       );
                     },
@@ -181,7 +184,16 @@ class _HomeState extends State<Home> {
               isDismissible: true,
               useSafeArea: false,
               isScrollControlled: true,
-              builder: (context) => AddTaskWidget(viewmodel: _viewmodel),
+              builder:
+                  (context) => TaskWidget(
+                    viewmodel: _viewmodel,
+                    taskEntity: TaskEntity(
+                      title: '',
+                      description: '',
+                      isCompleted: false,
+                      createdAt: DateTime.now(),
+                    ),
+                  ),
             );
           },
           child: Icon(

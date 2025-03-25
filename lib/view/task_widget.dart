@@ -5,16 +5,21 @@ import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 
 import 'package:minimalist_todo/config/globals_app.dart' as globals;
 
-class AddTaskWidget extends StatefulWidget {
-  const AddTaskWidget({super.key, required HomeViewmodel viewmodel})
-    : _viewmodel = viewmodel;
+class TaskWidget extends StatefulWidget {
+  const TaskWidget({
+    super.key,
+    required HomeViewmodel viewmodel,
+    required TaskEntity taskEntity,
+  }) : _viewmodel = viewmodel,
+       _taskEntity = taskEntity;
   final HomeViewmodel _viewmodel;
+  final TaskEntity _taskEntity;
 
   @override
-  State<AddTaskWidget> createState() => _AddTaskWidgetState();
+  State<TaskWidget> createState() => _TaskWidgetState();
 }
 
-class _AddTaskWidgetState extends State<AddTaskWidget> {
+class _TaskWidgetState extends State<TaskWidget> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
   bool areFieldsValid = false;
@@ -23,9 +28,8 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
   void initState() {
     titleController = TextEditingController();
     descriptionController = TextEditingController();
-    titleController.addListener(() {
-      setState(() => areFieldsValid = titleController.text.isNotEmpty);
-    });
+    titleController.text = widget._taskEntity.title;
+    descriptionController.text = widget._taskEntity.description;
     super.initState();
   }
 
@@ -34,7 +38,7 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       height: MediaQuery.of(context).size.height,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -65,8 +69,8 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
               ),
             ),
             globals.largeBoxSpace,
-            _buildFormField(titleController, 'Título', 1, 18),
-            _buildFormField(descriptionController, 'Descrição', 7, 100),
+            _buildTitleFormField(),
+            _buildDescriptionFormField(),
             globals.smallBoxSpace,
           ],
         ),
@@ -74,33 +78,52 @@ class _AddTaskWidgetState extends State<AddTaskWidget> {
     );
   }
 
-  Widget _buildFormField(
-    TextEditingController controller,
-    String hintText,
-    int lines,
-    int maxLength,
-  ) {
+  Widget _buildTitleFormField() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextFormField(
         focusNode: FocusNode(),
         autofocus: true,
-        controller: controller,
+        controller: titleController,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
-        style:
-            hintText == 'Título'
-                ? Theme.of(context).textTheme.titleSmall
-                : Theme.of(context).textTheme.bodyLarge,
-        maxLength: maxLength,
-        maxLines: lines,
+        style: Theme.of(context).textTheme.titleSmall,
+        maxLength: 18,
+        maxLines: 1,
         decoration: InputDecoration(
           counter: SizedBox(),
-          hintText: hintText,
-          hintStyle:
-              hintText == 'Título'
-                  ? Theme.of(context).textTheme.titleSmall
-                  : Theme.of(context).textTheme.bodyLarge,
+          hintText: widget._taskEntity.title == '' ? 'Título' : null,
+          hintStyle: Theme.of(context).textTheme.titleSmall,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDescriptionFormField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: TextFormField(
+        focusNode: FocusNode(),
+        autofocus: false,
+        controller: descriptionController,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+        style: Theme.of(context).textTheme.bodyLarge,
+        maxLength: 10,
+        maxLines: 7,
+        decoration: InputDecoration(
+          counter: SizedBox(),
+          hintText: widget._taskEntity.description == '' ? 'Descrição' : null,
+          hintStyle: Theme.of(context).textTheme.bodyLarge,
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),
           ),

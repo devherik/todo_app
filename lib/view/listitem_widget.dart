@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
+import 'package:minimalist_todo/view/task_widget.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
 
+// ignore: unused_import
 import 'package:minimalist_todo/config/globals_app.dart' as globals;
 
 class ListitemWidget extends StatefulWidget {
@@ -20,22 +22,31 @@ class ListitemWidget extends StatefulWidget {
 }
 
 class _ListitemWidgetState extends State<ListitemWidget> {
-  double _heigth = 80;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() => _heigth = _heigth == 80 ? 150 : 80),
+      onTap:
+          () => showModalBottomSheet(
+            context: context,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            enableDrag: false,
+            isDismissible: true,
+            useSafeArea: false,
+            isScrollControlled: true,
+            builder:
+                (context) => TaskWidget(
+                  viewmodel: widget._viewmodel,
+                  taskEntity: widget._taskEntity,
+                ),
+          ),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        height: _heigth,
+        height: 150,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color:
-              _heigth == 80
-                  ? Theme.of(context).colorScheme.primary
-                  : Colors.white70,
+          color: Colors.white70,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +61,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
                 children: [
                   _buildTitle(),
                   const SizedBox(height: 8, child: Divider()),
-                  _heigth == 150 ? _buildDescription() : Container(),
+                  _buildDescription(),
                 ],
               ),
             ),
@@ -70,7 +81,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
         const Spacer(),
         Text(
           widget._taskEntity.getDatetime,
-          style: Theme.of(context).textTheme.labelMedium,
+          style: Theme.of(context).textTheme.labelSmall,
         ),
       ],
     );
@@ -79,7 +90,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
   Widget _buildDescription() {
     return Text(
       widget._taskEntity.description,
-      overflow: TextOverflow.clip,
+      overflow: TextOverflow.ellipsis,
       style: Theme.of(context).textTheme.labelMedium,
     );
   }
