@@ -84,7 +84,6 @@ class _HomeState extends State<Home> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            globals.smallBoxSpace,
             Expanded(
               flex: 6,
               child: ValueListenableBuilder<List<TaskEntity>>(
@@ -158,10 +157,10 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            _addButton(),
           ],
         ),
       ),
+      floatingActionButton: _addButton(),
     );
   }
 

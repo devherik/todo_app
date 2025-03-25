@@ -39,33 +39,34 @@ class _ListitemWidgetState extends State<ListitemWidget> {
                   taskEntity: widget._taskEntity,
                 ),
           ),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: 150,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white70,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Flexible(child: _toggleTask()),
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildTitle(),
-                  const SizedBox(height: 8, child: Divider()),
-                  _buildDescription(),
-                ],
+      child: Card(
+        borderOnForeground: false,
+        margin: const EdgeInsets.all(0),
+        shadowColor: Theme.of(context).colorScheme.tertiary,
+        color: Theme.of(context).colorScheme.secondary,
+        elevation: 1,
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Flexible(child: _toggleTask()),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildTitle(),
+                    Divider(color: Theme.of(context).colorScheme.tertiary),
+                    _buildDescription(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

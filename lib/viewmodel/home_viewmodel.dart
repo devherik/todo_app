@@ -88,4 +88,13 @@ class HomeViewmodel extends ValueNotifier<List<TaskEntity>> {
           (failure) => MyApp.of(context)!.showToaster(failure.toString()),
         );
   }
+
+  Future<void> updateTask(TaskEntity task) async {
+    await _repository
+        .updateTask(task)
+        .onSuccess((success) async => await update())
+        .onFailure(
+          (failure) => MyApp.of(context)!.showToaster(failure.toString()),
+        );
+  }
 }

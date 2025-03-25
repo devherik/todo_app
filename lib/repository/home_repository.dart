@@ -146,4 +146,17 @@ class HomeRepository {
       return Failure(e);
     }
   }
+
+  Future<Result<bool, Exception>> updateTask(TaskEntity update) async {
+    try {
+      final data = tasksBox.values.toList();
+      final index = data.indexWhere(
+        (element) => element['index'] == update.index,
+      );
+      await tasksBox.putAt(index, update.toJson());
+      return Success(true);
+    } on Exception catch (e) {
+      return Failure(e);
+    }
+  }
 }
