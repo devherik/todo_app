@@ -169,7 +169,7 @@ class _HomeState extends State<Home> {
       builder: (context) {
         return MaterialButton(
           elevation: 2,
-          minWidth: MediaQuery.of(context).size.width * .35,
+          minWidth: MediaQuery.of(context).size.width * .25,
           height: 65,
           color: Theme.of(context).colorScheme.secondary,
           shape: RoundedRectangleBorder(

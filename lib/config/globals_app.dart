@@ -19,3 +19,36 @@ var smallBoxSpace = const SizedBox(height: 24);
 var mediumBoxSpace = const SizedBox(height: 48);
 var largeBoxSpace = const SizedBox(height: 60);
 var veryLargeBoxSpace = const SizedBox(height: 96);
+
+//generics
+void showToaster(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Center(
+        child: Text(message, style: Theme.of(context).textTheme.labelLarge),
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+    ),
+  );
+}
+
+Future<bool> showUndoToaster(BuildContext context) async {
+  bool acao = false;
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: GestureDetector(
+        child: Center(
+          child: Text(
+            'Toque para desfazer',
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+        onTap: () async => acao = true,
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: Theme.of(context).colorScheme.primary,
+    ),
+  );
+  return acao;
+}
