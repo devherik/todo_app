@@ -43,33 +43,9 @@ class _TaskWidgetState extends State<TaskWidget> {
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Builder(
-                builder:
-                    (context) => IconButton(
-                      onPressed: () async {
-                        if (titleController.text.isNotEmpty) {
-                          final newTask = TaskEntity(
-                            title: titleController.text.trim(),
-                            description: descriptionController.text.trim(),
-                            isCompleted: widget._taskEntity.isCompleted,
-                            createdAt: widget._taskEntity.createdAt,
-                          );
-                          newTask.index = widget._taskEntity.index;
-                          isUpdating
-                              ? await widget._viewmodel.updateTask(newTask)
-                              : await widget._viewmodel.addTask(newTask);
-                        }
-                        // ignore: use_build_context_synchronously
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(
-                        Iconsax.arrow_left,
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [_backButton(), _toggleButton()],
             ),
             globals.largeBoxSpace,
             _buildTitleFormField(),
@@ -141,48 +117,50 @@ class _TaskWidgetState extends State<TaskWidget> {
     );
   }
 
-  Widget _buildButton() {
+  Widget _backButton() {
     return Builder(
-      builder: (context) {
-        return MaterialButton(
-          elevation: 0,
-          minWidth: double.infinity,
-          clipBehavior: Clip.antiAlias,
-          disabledColor: Theme.of(context).colorScheme.primary,
-          color: Theme.of(context).colorScheme.scrim,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(16),
-              bottomRight: Radius.circular(16),
+      builder:
+          (context) => IconButton(
+            onPressed: () async {
+              if (titleController.text.isNotEmpty) {
+                final newTask = TaskEntity(
+                  title: titleController.text.trim(),
+                  description: descriptionController.text.trim(),
+                  isCompleted: widget._taskEntity.isCompleted,
+                  createdAt: widget._taskEntity.createdAt,
+                );
+                newTask.index = widget._taskEntity.index;
+                isUpdating
+                    ? await widget._viewmodel.updateTask(newTask)
+                    : await widget._viewmodel.addTask(newTask);
+              }
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Iconsax.arrow_left,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
           ),
-          onPressed:
-              isUpdating
-                  ? () async {
-                    await widget._viewmodel
-                        .addTask(
-                          TaskEntity(
-                            title: titleController.text.trim(),
-                            description: descriptionController.text.trim(),
-                            isCompleted: false,
-                            createdAt: DateTime.now(),
-                          ),
-                        )
-                        .whenComplete(() {
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pop();
-                        });
-                  }
-                  : null,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32.0),
-            child: Text(
-              'ADICIONAR',
-              style: Theme.of(context).textTheme.labelLarge,
+    );
+  }
+
+  Widget _toggleButton() {
+    return Builder(
+      builder:
+          (context) => IconButton(
+            onPressed: () async {
+              widget._taskEntity.isCompleted = !widget._taskEntity.isCompleted;
+              await widget._viewmodel.toggleTask(widget._taskEntity);
+              setState(() {});
+            },
+            icon: Icon(
+              widget._taskEntity.isCompleted
+                  ? Iconsax.toggle_on_circle5
+                  : Iconsax.toggle_off_circle,
+              color: Theme.of(context).colorScheme.inversePrimary,
             ),
           ),
-        );
-      },
     );
   }
 

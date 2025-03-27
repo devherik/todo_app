@@ -27,14 +27,14 @@ void showToaster(BuildContext context, String message) {
       content: Center(
         child: Text(message, style: Theme.of(context).textTheme.labelLarge),
       ),
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 1),
       backgroundColor: Theme.of(context).colorScheme.primary,
     ),
   );
 }
 
 Future<bool> showUndoToaster(BuildContext context) async {
-  bool acao = false;
+  bool action = false;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: GestureDetector(
@@ -44,11 +44,11 @@ Future<bool> showUndoToaster(BuildContext context) async {
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
-        onTap: () async => acao = true,
+        onTap: () async => action = true,
       ),
       duration: const Duration(seconds: 2),
       backgroundColor: Theme.of(context).colorScheme.primary,
     ),
   );
-  return acao;
+  return action;
 }

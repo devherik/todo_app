@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minimalist_todo/view/app_bar_widget.dart';
 import 'package:minimalist_todo/view/task_widget.dart';
 import 'package:minimalist_todo/view/listitem_widget.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
@@ -33,51 +34,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.15,
         centerTitle: false,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              'Minhas tarefas',
-              style: GoogleFonts.ubuntu(
-                fontSize: 24,
-                letterSpacing: 2,
-                color: Theme.of(context).colorScheme.tertiary.withAlpha(150),
-              ),
-            ),
-            //TODO: add an animation when changing the tasks list
-            Text(
-              _isArquived ? 'Arquivadas' : 'Ativas',
-              style: GoogleFonts.ubuntu(
-                fontSize: 24,
-                letterSpacing: 2,
-                color: Theme.of(context).colorScheme.tertiary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Divider(
-              thickness: 6,
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-          ],
-        ),
-        actions: [
-          Builder(
-            builder:
-                (context) => IconButton(
-                  onPressed: () async {
-                    //change the tasks list to the arquived tasks and vice versa
-                    if (!_isArquived) {
-                      await _viewmodel.updateArquived();
-                    } else {
-                      await _viewmodel.update();
-                    }
-                    setState(() => _isArquived = !_isArquived);
-                  },
-                  icon: Icon(Iconsax.arrow_swap_horizontal),
-                ),
-          ),
-        ],
+        title: AppBarTextWidget(viewmodel: _viewmodel),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
