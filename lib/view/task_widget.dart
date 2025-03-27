@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minimalist_todo/data_sources/task_entity.dart';
 import 'package:minimalist_todo/viewmodel/home_viewmodel.dart';
@@ -40,19 +41,20 @@ class _TaskWidgetState extends State<TaskWidget> {
       duration: const Duration(milliseconds: 200),
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [_backButton(), _toggleButton()],
-            ),
-            globals.largeBoxSpace,
-            _buildTitleFormField(),
-            _buildDescriptionFormField(),
-            globals.smallBoxSpace,
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _backButton(),
+              Row(children: [_statusText(), _toggleButton()]),
+            ],
+          ),
+          globals.largeBoxSpace,
+          _buildTitleFormField(),
+          _buildDescriptionFormField(),
+          globals.smallBoxSpace,
+        ],
       ),
     );
   }
@@ -156,11 +158,40 @@ class _TaskWidgetState extends State<TaskWidget> {
             },
             icon: Icon(
               widget._taskEntity.isCompleted
-                  ? Iconsax.toggle_on_circle5
-                  : Iconsax.toggle_off_circle,
+                  ? Iconsax.verify
+                  : Icons.circle_outlined,
               color: Theme.of(context).colorScheme.inversePrimary,
             ),
           ),
+    );
+  }
+
+  Widget _statusText() {
+    if (widget._taskEntity.isCompleted) {
+      return Text(
+        'finalizada',
+        style: GoogleFonts.ubuntu(
+          fontSize: 12,
+          letterSpacing: 2,
+          color: Theme.of(context).colorScheme.tertiary,
+        ),
+      );
+    } else {
+      return Text(
+        'aberta',
+        style: GoogleFonts.ubuntu(
+          fontSize: 12,
+          letterSpacing: 2,
+          color: Theme.of(context).colorScheme.tertiary,
+        ),
+      );
+    }
+  }
+
+  Widget _bottomStatusBar() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Text('Criado em ${widget._taskEntity.getDatetime}'),
     );
   }
 

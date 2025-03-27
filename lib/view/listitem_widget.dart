@@ -43,7 +43,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
         borderOnForeground: false,
         margin: const EdgeInsets.all(0),
         shadowColor: Theme.of(context).colorScheme.tertiary,
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).colorScheme.primary.withAlpha(700),
         elevation: 1,
         clipBehavior: Clip.antiAlias,
         child: Padding(
