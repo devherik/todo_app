@@ -46,71 +46,27 @@ class _HomeState extends State<Home> {
               child: ValueListenableBuilder<List<TaskEntity>>(
                 valueListenable: _viewmodel,
                 builder: (context, tasks, child) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      final task = tasks[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Dismissible(
-                          key: Key(task.index.toString()),
-                          background: Container(
-                            padding: const EdgeInsets.only(right: 10, left: 10),
-                            decoration: BoxDecoration(
-                              color: globals.blue,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                _isArquived ? 'Restaurar' : 'Arquivar',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 2,
-                                  color: globals.primaryDarkColor,
-                                ),
-                              ),
-                            ),
+                  if (tasks.isNotEmpty) {
+                    return _listTasksBuilder(tasks);
+                  } else {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            '"Com organização e tempo, acha-se o segredo de fazer tudo e bem feito."',
+                            style: Theme.of(context).textTheme.displayLarge,
                           ),
-                          secondaryBackground: Container(
-                            padding: const EdgeInsets.only(right: 10, left: 10),
-                            decoration: BoxDecoration(
-                              color: globals.red,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                'Apagar',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 2,
-                                  color: globals.primaryDarkColor,
-                                ),
-                              ),
-                            ),
+                          globals.verySmallBoxSpace,
+                          Text(
+                            'Pitagoras',
+                            style: Theme.of(context).textTheme.labelMedium,
                           ),
-                          onDismissed: (direction) async {
-                            if (direction == DismissDirection.startToEnd) {
-                              _isArquived
-                                  ? await _viewmodel.unarquiveTask(task)
-                                  : await _viewmodel.arquiveTask(task);
-                            } else {
-                              await _viewmodel.removeTask(task);
-                            }
-                          },
-                          behavior: HitTestBehavior.translucent,
-                          child: ListitemWidget(
-                            viewmodel: _viewmodel,
-                            taskEntity: task,
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                        ],
+                      ),
+                    );
+                  }
                 },
               ),
             ),
@@ -118,6 +74,71 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: _addButton(),
+    );
+  }
+
+  Widget _listTasksBuilder(List<TaskEntity> tasks) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Dismissible(
+            key: Key(task.index.toString()),
+            background: Container(
+              padding: const EdgeInsets.only(right: 10, left: 10),
+              decoration: BoxDecoration(
+                color: globals.blue,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _isArquived ? 'Restaurar' : 'Arquivar',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    color: globals.primaryDarkColor,
+                  ),
+                ),
+              ),
+            ),
+            secondaryBackground: Container(
+              padding: const EdgeInsets.only(right: 10, left: 10),
+              decoration: BoxDecoration(
+                color: globals.red,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'Apagar',
+                  style: GoogleFonts.roboto(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    color: globals.primaryDarkColor,
+                  ),
+                ),
+              ),
+            ),
+            onDismissed: (direction) async {
+              if (direction == DismissDirection.startToEnd) {
+                _isArquived
+                    ? await _viewmodel.unarquiveTask(task)
+                    : await _viewmodel.arquiveTask(task);
+              } else {
+                await _viewmodel.removeTask(task);
+              }
+            },
+            behavior: HitTestBehavior.translucent,
+            child: ListitemWidget(viewmodel: _viewmodel, taskEntity: task),
+          ),
+        );
+      },
     );
   }
 

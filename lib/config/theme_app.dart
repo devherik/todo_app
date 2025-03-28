@@ -59,6 +59,24 @@ abstract class ThemeApp {
           letterSpacing: 2,
           color: globals.primaryDarkColor,
         ),
+        displayLarge: GoogleFonts.roboto(
+          fontSize: 16,
+          letterSpacing: 2,
+          color: globals.primaryDarkColor,
+          fontWeight: FontWeight.bold,
+        ),
+        displayMedium: GoogleFonts.roboto(
+          fontSize: 12,
+          letterSpacing: 2,
+          color: globals.primaryDarkColor,
+          fontWeight: FontWeight.bold,
+        ),
+        displaySmall: GoogleFonts.roboto(
+          fontSize: 8,
+          letterSpacing: 2,
+          color: globals.primaryDarkColor,
+          fontWeight: FontWeight.bold,
+        ),
         labelLarge: GoogleFonts.roboto(
           fontSize: 16,
           letterSpacing: 2,

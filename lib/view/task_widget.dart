@@ -152,7 +152,7 @@ class _TaskWidgetState extends State<TaskWidget> {
             },
             icon: Icon(
               widget._taskEntity.isCompleted
-                  ? Iconsax.verify
+                  ? Iconsax.verify5
                   : Icons.circle_outlined,
               color: Theme.of(context).colorScheme.inversePrimary,
             ),

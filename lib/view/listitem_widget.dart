@@ -40,7 +40,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
                 ),
           ),
       child: Card(
-        borderOnForeground: false,
+        borderOnForeground: true,
         margin: const EdgeInsets.all(0),
         shadowColor: Theme.of(context).colorScheme.tertiary,
         color: Theme.of(context).colorScheme.primary.withAlpha(700),
@@ -60,7 +60,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _buildTitle(),
-                    Divider(color: Theme.of(context).colorScheme.tertiary),
+                    globals.verySmallBoxSpace,
                     _buildDescription(),
                   ],
                 ),
@@ -77,7 +77,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
       children: [
         Text(
           widget._taskEntity.title,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.displayLarge,
         ),
         const Spacer(),
         Text(
@@ -105,7 +105,9 @@ class _ListitemWidgetState extends State<ListitemWidget> {
       padding: const EdgeInsets.all(16),
       color: Theme.of(context).colorScheme.tertiary,
       icon: Icon(
-        widget._taskEntity.isCompleted ? Iconsax.verify : Icons.circle_outlined,
+        widget._taskEntity.isCompleted
+            ? Iconsax.verify5
+            : Icons.circle_outlined,
       ),
     );
   }
