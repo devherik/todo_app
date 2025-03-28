@@ -82,8 +82,9 @@ class HomeRepository {
   Future<Result<bool, Exception>> addTask(TaskEntity task) async {
     int tasksCount = indexBox.get('index', defaultValue: 0);
     try {
-      task.setIndex(tasksCount++);
+      task.setIndex(tasksCount);
       await tasksBox.add(task.toJson());
+      tasksCount++;
       await indexBox.put('index', tasksCount);
       return Success(true);
     } on Exception catch (e) {

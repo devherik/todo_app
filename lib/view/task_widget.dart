@@ -42,18 +42,25 @@ class _TaskWidgetState extends State<TaskWidget> {
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _backButton(),
-              Row(children: [_statusText(), _toggleButton()]),
+          Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _backButton(),
+                  Row(children: [_statusText(), _toggleButton()]),
+                ],
+              ),
+              globals.largeBoxSpace,
+              _buildTitleFormField(),
+              _buildDescriptionFormField(),
+              globals.smallBoxSpace,
             ],
           ),
-          globals.largeBoxSpace,
-          _buildTitleFormField(),
-          _buildDescriptionFormField(),
-          globals.smallBoxSpace,
+          _bottomStatusBar(),
         ],
       ),
     );
@@ -123,20 +130,7 @@ class _TaskWidgetState extends State<TaskWidget> {
     return Builder(
       builder:
           (context) => IconButton(
-            onPressed: () async {
-              if (titleController.text.isNotEmpty) {
-                final newTask = TaskEntity(
-                  title: titleController.text.trim(),
-                  description: descriptionController.text.trim(),
-                  isCompleted: widget._taskEntity.isCompleted,
-                  createdAt: widget._taskEntity.createdAt,
-                );
-                newTask.index = widget._taskEntity.index;
-                isUpdating
-                    ? await widget._viewmodel.updateTask(newTask)
-                    : await widget._viewmodel.addTask(newTask);
-              }
-              // ignore: use_build_context_synchronously
+            onPressed: () {
               Navigator.of(context).pop();
             },
             icon: Icon(
@@ -191,7 +185,7 @@ class _TaskWidgetState extends State<TaskWidget> {
   Widget _bottomStatusBar() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      child: Text('Criado em ${widget._taskEntity.getDatetime}'),
+      child: Center(child: Text('Criado em ${widget._taskEntity.getDatetime}')),
     );
   }
 
