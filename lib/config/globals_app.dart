@@ -7,9 +7,9 @@ const red = Color.fromARGB(255, 226, 141, 141);
 const blue = Color.fromARGB(255, 84, 189, 238);
 var primaryDarkColor = HexColor('4C4B63');
 var secondaryDarkColor = HexColor('949396');
-var terciaryDarkColor = HexColor('C3C3C3');
-var primaryLightColor = HexColor('C3C3C3');
-var secondaryLightColor = HexColor('ABA8B2');
+var terciaryDarkColor = HexColor('D8E1E9');
+var primaryLightColor = HexColor('D8E1E9');
+var secondaryLightColor = HexColor('B3C5D7');
 var terciaryLightColor = HexColor('4C4B63');
 var neutralColor = HexColor('FAFF7F');
 
