@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late HomeViewmodel _viewmodel;
-  bool _isArquived = false;
+  bool _arquivedTasks = false;
 
   @override
   void initState() {
@@ -33,8 +33,12 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.15,
-        centerTitle: false,
-        title: _appBarTextWidget(),
+        title: Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 36.0),
+            child: _appBarTextWidget(),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -96,7 +100,7 @@ class _HomeState extends State<Home> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  _isArquived ? 'Restaurar' : 'Arquivar',
+                  _arquivedTasks ? 'Restaurar' : 'Arquivar',
                   style: GoogleFonts.roboto(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -127,7 +131,7 @@ class _HomeState extends State<Home> {
             ),
             onDismissed: (direction) async {
               if (direction == DismissDirection.startToEnd) {
-                _isArquived
+                _arquivedTasks
                     ? await _viewmodel.unarquiveTask(task)
                     : await _viewmodel.arquiveTask(task);
               } else {
@@ -184,74 +188,65 @@ class _HomeState extends State<Home> {
   }
 
   Widget _appBarTextWidget() {
-    List<String> pages = ['Ativas', 'Arquivadas'];
-    return Swiper(
-      loop: true,
-      layout: SwiperLayout.STACK,
-      duration: 200,
-      scrollDirection: Axis.horizontal,
-      itemHeight: 80,
-      itemWidth: MediaQuery.of(context).size.width,
-      onIndexChanged: (value) async {
-        if (!_isArquived) {
-          await _viewmodel.updateArquived();
-        } else {
-          await _viewmodel.update();
-        }
-        setState(() => _isArquived = !_isArquived);
-      },
-      itemBuilder:
-          (context, index) => Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+    List<String> pages = ['Arquivadas', 'Ativas'];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Minhas tarefas',
+              style: GoogleFonts.ubuntu(
+                fontSize: 24,
+                letterSpacing: 2,
+                color: Theme.of(context).colorScheme.tertiary.withAlpha(150),
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      'Minhas tarefas',
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 24,
-                        letterSpacing: 2,
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.tertiary.withAlpha(150),
+            Swiper(
+              loop: true,
+              layout: SwiperLayout.STACK,
+              duration: 200,
+              scrollDirection: Axis.horizontal,
+              itemHeight: 80,
+              itemWidth: MediaQuery.of(context).size.width * .8,
+              onIndexChanged: (value) async {
+                _arquivedTasks = !_arquivedTasks;
+                _arquivedTasks
+                    ? await _viewmodel.updateArquived()
+                    : await _viewmodel.update();
+                setState(() {});
+              },
+              itemBuilder: (context, index) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        pages[index],
+                        style: GoogleFonts.ubuntu(
+                          fontSize: 24,
+                          letterSpacing: 2,
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      pages[index],
-                      style: GoogleFonts.ubuntu(
-                        fontSize: 24,
-                        letterSpacing: 2,
-                        color: Theme.of(context).colorScheme.tertiary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                Builder(
-                  builder:
-                      (context) => IconButton(
-                        onPressed: () async {
-                          //change the tasks list to the arquived tasks and vice versa
-                          if (!_isArquived) {
-                            await _viewmodel.updateArquived();
-                          } else {
-                            await _viewmodel.update();
-                          }
-                          setState(() => _isArquived = !_isArquived);
-                        },
-                        icon: Icon(Iconsax.arrow_swap_horizontal),
-                      ),
-                ),
-              ],
+                      Icon(Iconsax.arrow_swap_horizontal),
+                    ],
+                  ),
+                );
+              },
+              itemCount: pages.length,
             ),
-          ),
-      itemCount: pages.length,
+          ],
+        ),
+      ],
     );
   }
 }

@@ -58,11 +58,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildTitle(),
-                    globals.verySmallBoxSpace,
-                    _buildDescription(),
-                  ],
+                  children: [_buildTitle(), _buildDescription()],
                 ),
               ),
             ],

@@ -110,7 +110,8 @@ class _TaskWidgetState extends State<TaskWidget> {
         maxLines: 7,
         decoration: InputDecoration(
           counter: SizedBox(),
-          hintText: widget._taskEntity.description == '' ? 'Descrição' : null,
+          hintText:
+              widget._taskEntity.description == '' ? 'Mais detalhes' : null,
           hintStyle: Theme.of(context).textTheme.bodyLarge,
           border: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),
