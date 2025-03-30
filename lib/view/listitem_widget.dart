@@ -74,15 +74,21 @@ class _ListitemWidgetState extends State<ListitemWidget> {
 
   Widget _buildTitle() {
     return Row(
-      children: [
-        Text(
-          widget._taskEntity.title,
-          style: Theme.of(context).textTheme.displayLarge,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          child: Text(
+            widget._taskEntity.title,
+            maxLines: 2,
+            overflow: TextOverflow.clip,
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
         ),
-        const Spacer(),
-        Text(
-          widget._taskEntity.getDatetime,
-          style: Theme.of(context).textTheme.labelSmall,
+        Flexible(
+          child: Text(
+            widget._taskEntity.getDatetime,
+            style: Theme.of(context).textTheme.labelSmall,
+          ),
         ),
       ],
     );
@@ -90,9 +96,9 @@ class _ListitemWidgetState extends State<ListitemWidget> {
 
   Widget _buildDescription() {
     return Text(
-      widget._taskEntity.description,
+      widget._taskEntity.description != '' ? '...' : '',
       overflow: TextOverflow.ellipsis,
-      style: Theme.of(context).textTheme.labelMedium,
+      style: Theme.of(context).textTheme.labelLarge,
     );
   }
 

@@ -76,8 +76,8 @@ class _TaskWidgetState extends State<TaskWidget> {
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
         style: Theme.of(context).textTheme.titleSmall,
-        maxLength: 18,
-        maxLines: 1,
+        maxLength: 36,
+        maxLines: 3,
         decoration: InputDecoration(
           counter: SizedBox(),
           hintText: widget._taskEntity.title == '' ? 'Título' : null,
