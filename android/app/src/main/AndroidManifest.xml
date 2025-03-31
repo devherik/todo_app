@@ -2,7 +2,7 @@
     <application
         android:label="minimalist_todo"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/lc_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"

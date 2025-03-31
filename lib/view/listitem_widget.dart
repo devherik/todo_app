@@ -28,7 +28,7 @@ class _ListitemWidgetState extends State<ListitemWidget> {
       onTap:
           () => showModalBottomSheet(
             context: context,
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.secondary,
             enableDrag: false,
             isDismissible: true,
             useSafeArea: false,

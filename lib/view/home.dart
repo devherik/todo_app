@@ -33,11 +33,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.15,
-        title: Flexible(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 36.0),
-            child: _appBarTextWidget(),
-          ),
+        title: Padding(
+          padding: const EdgeInsets.only(top: 36.0),
+          child: _appBarTextWidget(),
         ),
       ),
       body: Padding(
